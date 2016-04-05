@@ -25,6 +25,16 @@ The new backbone is available for [preview in our test environment](http://www.g
  - **Tree Diffs**: For comparing the higher classification we used a [tool from Rod Page](http://iphylo.blogspot.dk/2015/12/visualising-difference-between-two.html) to [diff the tree down to families](http://mdoering.github.io/backbone-preview/families.html). There are surprisingly many changes, but all of them stem from an evolving Catalog of Life or the changed Algae classification.
  - **Nub Browser**: For comparing actual species and also reviewing the impact of the changed taxonomy on the GBIF occurrences we developed a [new Backbone Browser](http://mdoering.github.io/nub-browser/app/#/) sitting on top of our existing API. Our test environment has a complete copy of the current GBIF occurrence index which we have reprocessed to use the new backbone. This also includes all maps and [metrics](http://mdoering.github.io/nub-browser/app/#/metrics) which we show in the new browser.
 
+Family [*Asparagaceae*](http://mdoering.github.io/nub-browser/app/#/taxon/7683) as seen in the nub browser:
+![](Asparagaceae.png)
+
+Red numbers next to names indicate taxa that have less occurrences using the new backbone, while green numbers indicate an increase. This is also seen in the tree maps of the children by occurrences. The genus Campylandra J.G. Baker, 1875 is dark red with zero occurrences because the species in that genus were moved into the genus Rhodea in the latest Catalog of Life.
+
+Species [*Asparagus asparagoides*](http://mdoering.github.io/nub-browser/app/#/taxon/2768367) as seen in the nub browser:
+![](Asparagus_asparagoides.png)
+The details view shows all synonyms, the basionym and also a list of homonyms from the new backbone.
+
+
 ### Sources
 We manually curate a [list of priority ordered checklist datasets](https://github.com/gbif/checklistbank/blob/master/checklistbank-nub/nub-sources.tsv) that we use to build the taxonomy. Three datasets are treated slightly special:
 
@@ -35,18 +45,18 @@ We manually curate a [list of priority ordered checklist datasets](https://githu
 The GBIF portal now also lists [the source datasets that contributed to the GBIF Backbone](http://www.gbif-uat.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c/constituents) and the number of names that were used as primary references.
 
 
-### Other Improvments
-Many occurrence could not be matched to a backbone species in case the name existed multiple times as an accepted taxon. In the new backbone only one version of a name is ever considered accepted. All others now are flagged as doubtful if they are no synonyms. That avoids many ambiguous no-match issues. For example there are many occurrences of *Hyacinthoides hispanica* in Britain which only show up in the new backbone ([old](http://www.gbif.org/occurrence/795765755) / [new](http://www.gbif-uat.org/occurrence/795765755) occurrence, [old](http://api.gbif.org/v1/species/match?verbose=true&kingdom=plantae&name=Hyacinthoides%20hispanica) / [new](http://api.gbif-uat.org/v1/species/match?verbose=true&kingdom=plantae&name=Hyacinthoides%20hispanica) match). This is best seen in the [map comparison of the nub browser](http://mdoering.github.io/nub-browser/app/#/taxon/5304257), try to swipe the map! 
+### Other Improvements
+Apart from fixing the main issues of the current backbone listed above there is another frequently found case we have improved. Many occurrence could not be matched to a backbone species in case the name existed multiple times as an accepted taxon. In the new backbone, only one version of a name is ever considered accepted. All others now are flagged as doubtful if they are no synonyms. That avoids many ambiguous no-match issues. For example there are many occurrences of *Hyacinthoides hispanica* in Britain which only show up in the new backbone ([old](http://www.gbif.org/occurrence/795765755) / [new](http://www.gbif-uat.org/occurrence/795765755) occurrence, [old](http://api.gbif.org/v1/species/match?verbose=true&kingdom=plantae&name=Hyacinthoides%20hispanica) / [new](http://api.gbif-uat.org/v1/species/match?verbose=true&kingdom=plantae&name=Hyacinthoides%20hispanica) match). This is best seen in the [map comparison of the nub browser](http://mdoering.github.io/nub-browser/app/#/taxon/5304257), try to swipe the map! 
 
-## Known problems
+### Known problems
 We are aware of some problems with the new backbone which we like to address in the [next stage](http://dev.gbif.org/issues/browse/POR-3029). Two of these issues we consider as candidates for blocking the release of the new backbone:
 
-### Species matching service ignores authorship
+##### Species matching service ignores authorship
 As we better keep different authors apart the backbone now contains a lot more species names which just differ by their authorship. The current algorithm only keeps one of these names as the accepted name from the most trusted source (e.g. CoL) and treats the other as doubtful if they are not already treated as synonyms.  
 
 The problem currently is that the species matching service we use to align occurrences to the backbone does [not deal with authorship](http://dev.gbif.org/issues/browse/POR-2768). Therefore we have some cases where occurrences are attached to a doubtful name or even split across some of the "homonyms". 
 
-### Too eager basionym merging
+##### Too eager basionym merging
 The same epithet is sometimes used by the same author for different names in the same family. This currently leads to an [overly eager basionym grouping](http://dev.gbif.org/issues/browse/POR-2989) with less accepted names.
 
 As these names are still in the backbone and occurrences can be matched to them this is currently not considered a blocker.
