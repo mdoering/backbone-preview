@@ -1,7 +1,7 @@
 # tree-diffs
 Experiments showing (taxonomic) tree diffs.
 
-The GBIF Checklist Bank and backbone tools can dump datasets in simple hierarchical text files or create an xml representation. 
+The GBIF Checklist Bank and backbone tools can dump datasets in simple hierarchical text files or create an xml or gml representation. 
 
 ## Tree text files
 Tree text files simply list all names in a taxonomic order, sorting all children and synonyms by their rank and then name string.
@@ -48,8 +48,3 @@ ORDER  BY path;
 ```
 
 To export the results as txt files it is easiest to create a view and then copy that to a file.
-
-
-
-## Tree xml files
-tbd
